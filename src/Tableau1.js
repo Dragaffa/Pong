@@ -15,18 +15,11 @@ class Tableau1 extends Phaser.Scene{
 
     create(){
 
-        this.initKeyboard()
-        this.hauteur=500
-        this.largeur=1000
 
-        this.ball=this.physics.add.sprite(this.largeur/2,this.hauteur/2,'ball');
-        this.ball.setDisplaySize(20,20);
-        this.ball.body.setBounce(1.1,1.1);
-        this.ball.setVelocityX(100);
-        this.ball.setMaxVelocity(Phaser.Math.Between(200,-200));
-        //this.ball.setMaxVelocity(1000,1000);
+        this.hauteur = 500
+        this.largeur = 1000
 
-        this.haut=this.physics.add.sprite(0,-20,'carre').setOrigin(0,0);
+        this.haut = this.physics.add.sprite(0, -20, 'carre').setOrigin(0,0);
         this.haut.setDisplaySize(this.largeur,20);
         this.haut.body.setAllowGravity(false);
         this.haut.setImmovable(true);
@@ -36,37 +29,88 @@ class Tableau1 extends Phaser.Scene{
         this.bas.body.setAllowGravity(false);
         this.bas.setImmovable(true);
 
-        this.rat1=this.physics.add.sprite(this.largeur-20,this.hauteur/2, 'carre')
-        this.rat1.setDisplaySize(20,100);
-        this.rat1.body.setAllowGravity(false);
-        this.rat1.setImmovable(true);
+        this.gauche = this.physics.add.sprite(10, 0, 'carre').setOrigin(0,0);
+        this.gauche.setDisplaySize(20,100);
+        this.gauche.body.setAllowGravity(false);
+        this.gauche.setImmovable(true);
 
-        this.rat2=this.physics.add.sprite(20,this.hauteur/2, 'carre')
-        this.rat2.setDisplaySize(20,100);
-        this.rat2.body.setAllowGravity(false);
-        this.rat2.setImmovable(true);
+        this.droit=this.physics.add.sprite(this.largeur-30,0, 'carre').setOrigin(0,0);
+        this.droit.setDisplaySize(20,100);
+        this.droit.body.setAllowGravity(false);
+        this.droit.setImmovable(true);
 
-        this.physics.add.collider(this.ball,this.bas);
-        this.physics.add.collider(this.ball,this.haut);
-        this.physics.add.collider(this.ball,this.rat1);
-        this.physics.add.collider(this.ball,this.rat2);
+        this.balle = this.physics.add.sprite(this.largeur/2, this.hauteur/2, 'cercle');
+        this.balle.setDisplaySize(20,20);
+        this.balle.body.setBounce(1.5,1.5);
+        this.balle.setVelocityX(Phaser.Math.Between(-200, 200));
+        this.balle.setVelocityY(Phaser.Math.Between(-100, 100));
+        this.balle.body.setMaxVelocityX(500,500)
+        this.balle.body.setMaxVelocityY(100,100)
+
+        this.physics.add.collider(this.balle, this.droit);
+        this.physics.add.collider(this.balle, this.gauche);
+        this.physics.add.collider(this.balle, this.haut);
+        this.physics.add.collider(this.balle, this.bas);
+        this.initKeyboard();
     }
+    initKeyboard() {
+        let me=this;
+        this.input.keyboard.on('keydown', function(kevent)
+        {
+            switch (kevent.keyCode)
+            {
+                case Phaser.Input.Keyboard.KeyCodes.A:
+                    me.gauche.setVelocityY(-100)
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.Q:
+                    me.gauche.setVelocityY(100)
+                    break;
 
-    initKeyboard(){
-        this.input.keyboard.on('keydown', function (kevent) {
-            il faut utiliser la  velocity pour le moi du futur
-        }
+                case Phaser.Input.Keyboard.KeyCodes.P:
+                    me.droit.setVelocityY(-100)
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.M:
+                    me.droit.setVelocityY(100)
+                    break;
+
+            }
+
+        });
+        this.input.keyboard.on('keyup', function(kevent)
+        {
+            switch (kevent.keyCode)
+            {
+                case Phaser.Input.Keyboard.KeyCodes.A:
+                    me.gauche.setVelocityY(0)
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.Q:
+                    me.gauche.setVelocityY(0)
+                    break;
+
+                case Phaser.Input.Keyboard.KeyCodes.P:
+                    me.droit.setVelocityY(0)
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.M:
+                    me.droit.setVelocityY(0)
+                    break;
+            }
+        });
     }
 
     update(){
-        if (this.ball.x > this.largeur){
-            this.ball.x = 0
+        if(this.balle.x > this.largeur){
+            this.balle.x = this.largeur/2
+            this.balle.Y = this.largeur/2
         }
-        if (this.ball.y < 0){
-            this.ball.y = 0
+        if(this.balle.x < 0){
+            this.balle.x = this.largeur/2
+            this.balle.Y = this.largeur/2
         }
-        if (this.ball.y > this.hauteur){
-            this.ball.y = this.hauteur
+        if(this.balle.y < 0){
+            this.balle.y = 0
+        }
+        if(this.balle.y > this.hauteur){
+            this.balle.y = this.hauteur
         }
     }
 
