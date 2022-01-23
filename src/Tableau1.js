@@ -9,15 +9,21 @@ class Tableau1 extends Phaser.Scene{
      */
     preload() {
         this.load.image('carre', 'assets/carre.png');
-        this.load.image('balle', 'assets/cercle.png');
+        this.load.image('balle', 'assets/meteorite.png');
+
+        this.load.image('fire', 'assets/muzzleflash3.png');
+
+        this.load.image('fond', 'assets/galaxie.jpg');
     }
 
 
     create(){
 
-
         this.hauteur = 500
         this.largeur = 1000
+
+        this.fond = this.add.image(0,0,"fond").setOrigin(0,0);
+
 
         this.haut = this.physics.add.sprite(0, -20, 'carre').setOrigin(0,0);
         this.haut.setDisplaySize(this.largeur,20);
@@ -40,7 +46,7 @@ class Tableau1 extends Phaser.Scene{
         this.droit.setImmovable(true);
 
         this.balle = this.physics.add.sprite(this.largeur/2, this.hauteur/2, 'balle');
-        this.balle.setDisplaySize(20,20);
+        this.balle.setDisplaySize(40,40);
         this.balle.body.setBounce(1.5,1.5);
         //this.balle.setVelocityY(Phaser.Math.Between(0, 0));
         this.balle.body.setMaxVelocityX(500)
@@ -59,6 +65,22 @@ class Tableau1 extends Phaser.Scene{
         this.physics.add.collider(this.balle, this.haut);
         this.physics.add.collider(this.balle, this.bas);
 
+        this.particles = this.add.particles('fire');
+
+        this.particles.createEmitter({
+            speed: 100,
+            scale: { start: 0.1, end: 0 },
+            blendMode: 'ADD',
+            follow:this.balle,
+            lifespan: 2000,
+
+
+        });
+
+
+        this.joueurGauche = new Joueur('Player 1','joueurGauche')
+        this.joueurDroite = new Joueur('Player 2','joueurDroite')
+        console.log(this.joueurGauche)
 
         this.initKeyboard();
     }
@@ -85,6 +107,14 @@ class Tableau1 extends Phaser.Scene{
         this.balle.setVelocityY(0);
 
     }
+
+    win(joueur){
+        //alert('Joueur '+joueur.name+' gagne')
+        joueur.score ++;
+        //alert('Le score est de '+this.joueurGauche.score+' a '+this.joueurDroite.score)
+        this.Initiale();
+    }
+
 
     rebond(raquette){
             let me=this;
@@ -153,11 +183,11 @@ class Tableau1 extends Phaser.Scene{
 
     update(){
 
-        if(this.balle.x > this.largeur){
-            this.Initiale();
+        if(this.balle.x>this.largeur){
+            this.win(this.joueurGauche);
         }
-        if(this.balle.x < 0){
-            this.Initiale();
+        if(this.balle.x<0){
+            this.win(this.joueurDroite);
         }
 
         if(this.balle.y < 0){
