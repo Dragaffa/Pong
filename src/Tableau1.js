@@ -69,11 +69,11 @@ class Tableau1 extends Phaser.Scene{
 
         this.particles.createEmitter({
             speed: 100,
-            scale: { start: 0.1, end: 0 },
+            scale: { start: 0.3, end: 0 },
             blendMode: 'ADD',
             follow:this.balle,
-            lifespan: 2000,
-
+            lifespan: 600,
+            angle: this.balle.x+40,
 
         });
 
@@ -84,6 +84,8 @@ class Tableau1 extends Phaser.Scene{
 
         this.initKeyboard();
     }
+
+
 
     Initiale (){
         this.balle.setX(this.largeur/2);
@@ -138,48 +140,75 @@ class Tableau1 extends Phaser.Scene{
 
 
     initKeyboard() {
-        let me=this;
-        this.input.keyboard.on('keydown', function(kevent)
-        {
-            switch (kevent.keyCode)
+            let me=this;
+            this.input.keyboard.on('keydown', function(kevent)
             {
-                case Phaser.Input.Keyboard.KeyCodes.A:
-                    me.gauche.setVelocityY(-200)
-                    break;
-                case Phaser.Input.Keyboard.KeyCodes.Q:
-                    me.gauche.setVelocityY(200)
-                    break;
+                switch (kevent.keyCode)
+                {
+                    case Phaser.Input.Keyboard.KeyCodes.S:
+                        if (me.gauche.y>0){
+                            me.gauche.setVelocityY(-200)
+                        }
+                        else{
+                            me.gauche.setY(0)
+                            me.gauche.setVelocityY(0)
+                        }
+                        break;
 
-                case Phaser.Input.Keyboard.KeyCodes.P:
-                    me.droit.setVelocityY(-200)
-                    break;
-                case Phaser.Input.Keyboard.KeyCodes.M:
-                    me.droit.setVelocityY(200)
-                    break;
+                    case Phaser.Input.Keyboard.KeyCodes.X:
+                        if (me.gauche.y<400){
+                            me.gauche.setVelocityY(200)
+                        }
+                        else{
+                            me.gauche.setVelocityY(0)
+                            me.gauche.setY(400)
+                        }
+                        break;
 
-            }
+                    case Phaser.Input.Keyboard.KeyCodes.J:
+                        if (me.droit.y>0){
+                            me.droit.setVelocityY(-200)
+                        }
+                        else{
+                            me.droit.setY(0)
+                            me.droit.setVelocityY(0)
+                        }
+                        break;
 
-        });
-        this.input.keyboard.on('keyup', function(kevent)
-        {
-            switch (kevent.keyCode)
+                    case Phaser.Input.Keyboard.KeyCodes.N:
+                        if (me.droit.y<400){
+                            me.droit.setVelocityY(200)
+                        }
+                        else{
+                            me.droit.setY(400)
+                            me.droit.setVelocityY(0)
+
+                        }
+                        break;
+
+
+                }
+            });
+            this.input.keyboard.on('keyup', function(kevent)
             {
-                case Phaser.Input.Keyboard.KeyCodes.A:
-                    me.gauche.setVelocityY(0)
-                    break;
-                case Phaser.Input.Keyboard.KeyCodes.Q:
-                    me.gauche.setVelocityY(0)
-                    break;
+                switch (kevent.keyCode)
+                {
+                    case Phaser.Input.Keyboard.KeyCodes.S:
+                        me.gauche.setVelocityY(0)
+                        break
+                    case Phaser.Input.Keyboard.KeyCodes.X:
+                        me.gauche.setVelocityY(0)
+                        break
+                    case Phaser.Input.Keyboard.KeyCodes.J:
+                        me.droit.setVelocityY(0)
+                        break
+                    case Phaser.Input.Keyboard.KeyCodes.N:
+                        me.droit.setVelocityY(0)
+                        break
 
-                case Phaser.Input.Keyboard.KeyCodes.P:
-                    me.droit.setVelocityY(0)
-                    break;
-                case Phaser.Input.Keyboard.KeyCodes.M:
-                    me.droit.setVelocityY(0)
-                    break;
-            }
-        });
-    }
+                }
+            });
+        }
 
     update(){
 
