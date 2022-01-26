@@ -14,6 +14,8 @@ class Tableau1 extends Phaser.Scene{
         this.load.image('fire', 'assets/muzzleflash3.png');
 
         this.load.image('fond', 'assets/fondrond.jpg');
+
+        this.load.image('trou', 'assets/trounoir.png');
     }
 
 
@@ -45,13 +47,17 @@ class Tableau1 extends Phaser.Scene{
         this.droit.body.setAllowGravity(false);
         this.droit.setImmovable(true);
 
+
         this.balle = this.physics.add.sprite(this.largeur/2, this.hauteur/2, 'balle');
         this.balle.setDisplaySize(40,40);
         this.balle.body.setBounce(1.5,1.5);
         //this.balle.setVelocityY(Phaser.Math.Between(0, 0));
         this.balle.body.setMaxVelocityX(500)
         this.balle.body.setMaxVelocityY(100)
+
         this.Initiale();
+
+        this.creationtrounoir();
 
         let me = this ;
         this.physics.add.collider(this.balle, this.droit,function(){
@@ -85,6 +91,39 @@ class Tableau1 extends Phaser.Scene{
         this.initKeyboard();
     }
 
+    creationtrounoir(){
+        let me = this;
+        let trou;
+        this.obstacles=[];
+
+        for(let i=0;i<3;i++){
+                        
+            trou = this.physics.add.sprite(
+                Phaser.Math.Between(0, this.largeur),
+                Phaser.Math.Between(0, this.hauteur),
+                'trou');
+            trou.setDisplaySize(100,100);
+            trou.body.setAllowGravity(false);
+            trou.setImmovable(true);
+
+            this.tweens.add({
+                targets:[trou],
+                rotation: 6,
+                ease :'Repeat',
+                repeat:-1,
+                duration:1000,
+            })
+
+            this.obstacles.push(trou);
+
+            this.physics.add.collider(this.balle, trou, function () {
+                console.log("touche droitVert");
+                //me.sound.play('vertSound');
+                me.obstacles[i].setVisible(false);
+            });
+
+        }
+    }
 
 
     Initiale (){
@@ -210,22 +249,43 @@ class Tableau1 extends Phaser.Scene{
             });
         }
 
-    update(){
+    update() {
 
-        if(this.balle.x>this.largeur){
+        if (this.balle.x > this.largeur) {
             this.win(this.joueurGauche);
         }
-        if(this.balle.x<0){
+        if (this.balle.x < 0) {
             this.win(this.joueurDroite);
         }
 
-        if(this.balle.y < 0){
+        if (this.balle.y < 0) {
             this.balle.y = 0
         }
-        if(this.balle.y > this.hauteur){
+        if (this.balle.y > this.hauteur) {
             this.balle.y = this.hauteur
         }
+        if (this.balle.x < this.obstacles[0].x + 30 && this.balle.x > this.obstacles[0].x - 30) {
+            if (this.balle.y < this.obstacles[0].y + 30 && this.balle.y > this.obstacles[0].y - 30) {
+                this.balle.x == this.obstacles[1].x+100;
+                this.balle.y == this.obstacles[1].y+100;
+            }
+        }
+
+        if (this.balle.x < this.obstacles[1].x + 30 && this.balle.x > this.obstacles[1].x - 30) {
+            if (this.balle.y < this.obstacles[1].y + 30 && this.balle.y > this.obstacles[1].y - 30) {
+                this.balle.x == this.obstacles[2].x+100;
+                this.balle.y == this.obstacles[2].y+100;
+            }
+        }
+
+        if (this.balle.x < 500 && this.balle.x > 100) {
+            if (this.balle.y < 500  && this.balle.y > 100) {
+                this.balle.x == 30;
+            }
+        }
+
     }
+
 
 
 }
