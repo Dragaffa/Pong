@@ -1,9 +1,9 @@
 body{
     font-family: Arial, sans-serif;
     font-size: 12px;
-    background-color: #000000;
+    background-color: #880b0b;
     text-align: center;
-    background-image: url(assets/soleil.jpg);
+    background-image: url(https://raw.githubusercontent.com/Dragaffa/Pong/main/assets/fond3.jpg);
     background-repeat:no-repeat;
     background-size: cover;
     background-position: 100%,100%;
@@ -46,11 +46,11 @@ canvas{
 }
 
 .score{
-    color: #cb8457
+    color: #ffeab6
 }
 .name{
     font-size: 3vw;
-    color: #cb8457;
+    color: #ffd8c8;
 }
 
 #scores >* {
