@@ -1,8 +1,14 @@
 body{
     font-family: Arial, sans-serif;
     font-size: 12px;
-    background-color: #345969;
+    background-color: #000000;
     text-align: center;
+    background-image: url(assets/soleil.jpg);
+    background-repeat:no-repeat;
+    background-size: cover;
+    background-position: 100%,100%;
+    overflow: hidden;
+    padding: 0;
 }
 a{
     color: #808080;
