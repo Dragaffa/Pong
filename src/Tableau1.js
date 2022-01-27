@@ -26,6 +26,9 @@ class Tableau1 extends Phaser.Scene{
 
         this.fond = this.add.image(0,0,"fond").setOrigin(0,0);
 
+        this.particles = this.add.particles('trou');
+
+
 
         this.haut = this.physics.add.sprite(0, -20, 'carre').setOrigin(0,0);
         this.haut.setDisplaySize(this.largeur,20);
@@ -49,15 +52,25 @@ class Tableau1 extends Phaser.Scene{
 
 
         this.balle = this.physics.add.sprite(this.largeur/2, this.hauteur/2, 'balle');
-        this.balle.setDisplaySize(40,40);
+        this.balle.setDisplaySize(20,20);
         this.balle.body.setBounce(1.5,1.5);
         //this.balle.setVelocityY(Phaser.Math.Between(0, 0));
         this.balle.body.setMaxVelocityX(500)
         this.balle.body.setMaxVelocityY(100)
 
-        this.Initiale();
+        this.tweens.add({
+            targets:[this.balle],
+            rotation: 6.5,
+            ease :'Repeat',
+            repeat:1000000,
+            duration:1000,
+        })
 
         this.creationtrounoir();
+
+        this.Initiale();
+
+
 
         let me = this ;
         this.physics.add.collider(this.balle, this.droit,function(){
@@ -71,9 +84,9 @@ class Tableau1 extends Phaser.Scene{
         this.physics.add.collider(this.balle, this.haut);
         this.physics.add.collider(this.balle, this.bas);
 
-        this.particles = this.add.particles('fire');
+        //this.particles = this.add.particles('fire');
 
-        this.particles.createEmitter({
+        /*this.particles.createEmitter({
             speed: 100,
             scale: { start: 0.3, end: 0 },
             blendMode: 'ADD',
@@ -81,7 +94,7 @@ class Tableau1 extends Phaser.Scene{
             lifespan: 600,
             angle: this.balle.x+40,
 
-        });
+        });*/
 
 
         this.joueurGauche = new Joueur('Player 1','joueurGauche')
@@ -96,22 +109,23 @@ class Tableau1 extends Phaser.Scene{
         let trou;
         this.obstacles=[];
 
+
         for(let i=0;i<3;i++){
                         
             trou = this.physics.add.sprite(
-                Phaser.Math.Between(0, this.largeur),
-                Phaser.Math.Between(0, this.hauteur),
-                'trou');
-            trou.setDisplaySize(100,100);
+                Phaser.Math.Between(200, this.largeur-200),
+                Phaser.Math.Between(50, this.hauteur-50),
+                'balle');
+            trou.setDisplaySize(50,50);
             trou.body.setAllowGravity(false);
             trou.setImmovable(true);
 
             this.tweens.add({
                 targets:[trou],
-                rotation: 6,
+                rotation: 6.5,
                 ease :'Repeat',
                 repeat:-1,
-                duration:1000,
+                duration:10000,
             })
 
             this.obstacles.push(trou);
@@ -120,13 +134,41 @@ class Tableau1 extends Phaser.Scene{
                 console.log("touche droitVert");
                 //me.sound.play('vertSound');
                 me.obstacles[i].setVisible(false);
+                me.obstacles[i].destroy();
+                me.particles.createEmitter({
+                    scale: { start: 0.05, end: 0.1},
+                    //tint: { start: 0xff945e, end: 0xff945e },
+                    speed: 20,
+                    blendMode: 'ADD',
+                    frequency: 100,
+                    maxParticles: 6,
+                    x: me.obstacles[i].x,
+                    y: me.obstacles[i].y
+                });
+
             });
 
         }
     }
 
+    /**disparait(obstacle) {
+
+        obstacle.body.setEnable(false);
+        obstacle.setVisible(false);
+
+    }*/
 
     Initiale (){
+        let me = this
+
+
+        for(let i=0;i<me.obstacles.length;i++){
+            me.obstacles[i].destroy();
+        }
+
+        this.creationtrounoir();
+
+
         this.balle.setX(this.largeur/2);
         this.balle.setY(this.hauteur/2);
 
@@ -145,9 +187,13 @@ class Tableau1 extends Phaser.Scene{
             this.balle.setVelocityX(-200);
         }
 
+
+
         this.balle.setVelocityY(0);
 
     }
+
+
 
     win(joueur){
         //alert('Joueur '+joueur.name+' gagne')
@@ -264,25 +310,7 @@ class Tableau1 extends Phaser.Scene{
         if (this.balle.y > this.hauteur) {
             this.balle.y = this.hauteur
         }
-        if (this.balle.x < this.obstacles[0].x + 30 && this.balle.x > this.obstacles[0].x - 30) {
-            if (this.balle.y < this.obstacles[0].y + 30 && this.balle.y > this.obstacles[0].y - 30) {
-                this.balle.x == this.obstacles[1].x+100;
-                this.balle.y == this.obstacles[1].y+100;
-            }
-        }
 
-        if (this.balle.x < this.obstacles[1].x + 30 && this.balle.x > this.obstacles[1].x - 30) {
-            if (this.balle.y < this.obstacles[1].y + 30 && this.balle.y > this.obstacles[1].y - 30) {
-                this.balle.x == this.obstacles[2].x+100;
-                this.balle.y == this.obstacles[2].y+100;
-            }
-        }
-
-        if (this.balle.x < 500 && this.balle.x > 100) {
-            if (this.balle.y < 500  && this.balle.y > 100) {
-                this.balle.x == 30;
-            }
-        }
 
     }
 
